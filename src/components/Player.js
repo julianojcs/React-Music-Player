@@ -15,10 +15,15 @@ const Player = (props) => {
         }
     }
 
-    const timeUpdateHandler = (e) => {
+    const timeLoadHandler = (e) => {
         const current = e.target.currentTime
         const duration = e.target.duration
         setSongInfo({...songInfo, currentTime: current, duration})
+    }
+
+    const timeUpdateHandler = (e) => {
+        const current = e.target.currentTime
+        setSongInfo({...songInfo, currentTime: current})
     }
 
     const getTime = (time) => {
@@ -27,16 +32,30 @@ const Player = (props) => {
         )
     }
 
+    const dragHandler = (e) => {
+        audioRef.current.currentTime = e.target.value
+        setSongInfo({ 
+            ...songInfo, 
+            currentTime: e.target.value 
+        })
+    }
+
     const [songInfo, setSongInfo] = useState({
-        currentTime: null,
-        duration: null
+        currentTime: 0,
+        duration: 0
     })
 
     return(
         <div className="player">
             <div className="time-control">
                 <p>{getTime(songInfo.currentTime)}</p>
-                <input type="range" />
+                <input 
+                    min={0} 
+                    max={songInfo.duration} 
+                    value={songInfo.currentTime} 
+                    onChange={dragHandler} 
+                    type="range" 
+                />
                 <p>{getTime(songInfo.duration)}</p>
             </div>
             <div className="play-control">
@@ -46,7 +65,7 @@ const Player = (props) => {
             </div>
             <audio 
                 onTimeUpdate={timeUpdateHandler} 
-                onLoadedMetadata={timeUpdateHandler} 
+                onLoadedMetadata={timeLoadHandler} 
                 ref={audioRef} 
                 src={props.currentSong.audio}
             ></audio>
