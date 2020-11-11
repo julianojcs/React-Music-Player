@@ -10,10 +10,16 @@ function App() {
     const [songs, setSongs] = useState(data())
     // const [currentSong, setCurrentSong] = useState(songs[0])
     const [currentSong, setCurrentSong] = useState(songs.find((song) => song.active))   // Use the first song with the active state = true as currentSong initial value
+    const [isPlaying, setIsPlaying] = useState(false)
+
     return (
         <div className="App">
             <Song currentSong={currentSong} />
-            <Player currentSong={currentSong} />
+            <Player 
+                setIsPlaying={setIsPlaying}
+                isPlaying={isPlaying} 
+                currentSong={currentSong} 
+            />
         </div>
     );
 }

@@ -7,7 +7,12 @@ const Player = (props) => {
     const audioRef = useRef(null)
 
     const playSongHandler = () => {
-        console.log(audioRef.current)
+        props.setIsPlaying(!props.isPlaying)
+        if (props.isPlaying) {
+            audioRef.current.pause()
+        } else {
+            audioRef.current.play()
+        }
     }
 
     return(
