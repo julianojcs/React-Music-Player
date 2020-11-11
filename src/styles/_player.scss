@@ -1,3 +1,12 @@
+@media only screen and (max-width: 600px) {
+    .time-control {
+        width: 100% !important;
+    }
+    .play-control {
+        width: 60% !important;
+    }
+}
+
 .player {
     min-height: 20vh;
     display: flex;

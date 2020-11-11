@@ -1,7 +1,26 @@
+@media only screen and (max-width: 600px) {
+    .song-container {
+        img {
+            width: 50% !important;
+        }
+    }    
+}
+
 .song-container {
     min-height: 60vh;
     display: flex;
     flex-direction: column;
     align-items: center; //Needs display:flex
     justify-content: center;
+
+    img {
+        width: 20%;
+        border-radius: 50%;
+    }
+    h2 {
+        padding: 3rem 1rem 1rem 1rem;
+    }
+    h3 {
+        font-size: 1rem;
+    }
 }
