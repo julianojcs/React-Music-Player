@@ -1,12 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+:root {
+    --blue: #5b7dff;
+    --indigo: #6610f2;
+    --purple: #6f42c1;
+    --pink: #a180da;
+    --red: #f44455;
+    --orange: #fd7e14;
+    --yellow: #fcc100;
+    --green: #5fc27e;
+    --teal: #20c997;
+    --cyan: #47bac1;
+    --white: #fff;
+    --gray: #6c757d;
+    --light-gray: #aaa;
+    --gray-dark: #343a40;
+    --primary: #47bac1;
+    --secondary: #a180da;
+    --success: #5fc27e;
+    --info: #5b7dff;
+    --warning: #fcc100;
+    --danger: #f44455;
+    --light: #f8f9fa;
+    --dark: #354052;
+}
+
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}    
+
+body {
+    font-family: 'Lato', sans-serif;
 }
 
 h1, h2, h3 {
     color: rgb(54, 54, 54);
+}    
+
+h3, h4 {
+    font-weight: 400;
+    color: var(--gray);
 }
 
 @import "./song";
 @import "./player";
+@import "./library";

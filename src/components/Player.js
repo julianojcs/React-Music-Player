@@ -5,6 +5,17 @@ import { faPlay, faPause, faAngleLeft, faAngleRight, faDrumSteelpan } from "@for
 const Player = (props) => {
 
     const audioRef = useRef(null)
+    
+    const [songInfo, setSongInfo] = useState({
+        currentTime: 0,
+        duration: 0
+    })
+
+    const getTime = (time) => {
+        return (
+            Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2)
+        )
+    }
 
     const playSongHandler = () => {
         props.setIsPlaying(!props.isPlaying)
@@ -26,11 +37,6 @@ const Player = (props) => {
         setSongInfo({...songInfo, currentTime: current})
     }
 
-    const getTime = (time) => {
-        return (
-            Math.floor(time / 60) + ":" + ("0" + Math.floor(time % 60)).slice(-2)
-        )
-    }
 
     const dragHandler = (e) => {
         audioRef.current.currentTime = e.target.value
@@ -40,10 +46,12 @@ const Player = (props) => {
         })
     }
 
-    const [songInfo, setSongInfo] = useState({
-        currentTime: 0,
-        duration: 0
-    })
+    const timeEndHandler = (e) => {
+        props.setIsPlaying(false)
+        console.log(audioRef.current.currentTime)
+        setSongInfo({...songInfo, currentTime: 0})
+        // console.log(audioRef.current.ended)
+    }
 
     return(
         <div className="player">
@@ -71,6 +79,7 @@ const Player = (props) => {
             <audio 
                 onTimeUpdate={timeUpdateHandler} 
                 onLoadedMetadata={timeLoadHandler} 
+                onEnded={timeEndHandler}
                 ref={audioRef} 
                 src={props.currentSong.audio}
             ></audio>
