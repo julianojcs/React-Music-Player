@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlay, faPause, faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons"
 
 const Player = (props) => {
-
     
     const [songInfo, setSongInfo] = useState({
         currentTime: 0,
@@ -51,6 +50,19 @@ const Player = (props) => {
         // console.log(props.audioRef.current.ended)
     }
 
+    const skipTrackHandler = (direction) => {
+        let currentIndex = props.songs.findIndex((song) => song.id === props.currentSong.id)
+
+        if (direction === "skip-forward") {
+            // const nextIndex = (currentIndex+1 === props.songs.length) ? 0 : currentIndex + 1
+            const nextIndex = (currentIndex+1) % props.songs.length  // % = module, rest of division
+            props.setCurrentSong(props.songs[nextIndex])
+        } else if (direction === "skip-back") {
+            const nextIndex = (currentIndex === 0) ? props.songs.length-1 : currentIndex - 1
+            props.setCurrentSong(props.songs[nextIndex])
+        }
+    }
+
     return(
         <div className="player">
             <div className="time-control">
@@ -65,14 +77,24 @@ const Player = (props) => {
                 <p>{getTime(songInfo.duration)}</p>
             </div>
             <div className="play-control">
-                <FontAwesomeIcon className="skip-back" size="2x" icon={faAngleLeft} />
+                <FontAwesomeIcon 
+                    onClick={() => skipTrackHandler('skip-back')} 
+                    className="skip-back" 
+                    size="2x" 
+                    icon={faAngleLeft} 
+                />
                 <FontAwesomeIcon 
                     onClick={playSongHandler} 
                     className="play" 
                     size="2x" 
                     icon={ props.isPlaying ? faPause : faPlay } 
                 />
-                <FontAwesomeIcon className="skip-forward" size="2x" icon={faAngleRight} />
+                <FontAwesomeIcon 
+                    onClick={() => skipTrackHandler('skip-forward')} 
+                    className="skip-forward" 
+                    size="2x" 
+                    icon={faAngleRight} 
+                />
             </div>
             <audio 
                 onTimeUpdate={timeUpdateHandler} 

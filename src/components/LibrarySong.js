@@ -4,7 +4,6 @@ const LibrarySong = (props) => {
 
     const songSelectHandler = async () => {
         await props.setCurrentSong(props.song)
-        console.log(props.id)
 
         const newSongs = props.songs.map((song) => {
             return (
@@ -23,9 +22,6 @@ const LibrarySong = (props) => {
                     props.audioRef.current.play()
                 })
             }
-        //     props.audioRef.current.play()
-        // } else {
-        //     props.audioRef.current.pause()
         }
     }
 

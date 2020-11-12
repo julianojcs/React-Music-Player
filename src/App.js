@@ -8,10 +8,9 @@ import data from './data'
 
 function App() {
     document.title = 'Music Player'
-    const audioRef = useRef(null)  // It is a reference to the audio object at Player.js
 
+    const audioRef = useRef(null)  // It is a reference to the audio object at Player.js
     const [songs, setSongs] = useState(data())
-    // const [currentSong, setCurrentSong] = useState(songs[0])
     const [currentSong, setCurrentSong] = useState(songs.find((song) => song.active))   // Use the first song with the active state = true as currentSong initial value
     const [isPlaying, setIsPlaying] = useState(false)
     const [libraryStatus, setLibraryStatus] = useState(false)
@@ -21,7 +20,7 @@ function App() {
             <Nav {...{libraryStatus, setLibraryStatus}}/>
             <Song currentSong={currentSong} />
             <Player 
-                {...{setIsPlaying, isPlaying, currentSong, audioRef}}
+                {...{setIsPlaying, isPlaying, currentSong, audioRef, songs, setSongs, setCurrentSong}}
                 // setIsPlaying={setIsPlaying}
                 // isPlaying={isPlaying} 
                 // currentSong={currentSong} 
