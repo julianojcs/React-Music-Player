@@ -3,7 +3,7 @@ import LibrarySong from './LibrarySong'
 
 const Library = (props) => {
     return (
-        <div className="library">
+        <div className={`library ${props.libraryStatus ? 'active-library': ''}`}>
             <h2>Libray</h2>
             <div className="library-songs">
                 {
