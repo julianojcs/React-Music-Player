@@ -1,24 +1,24 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlay, faPause, faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons"
-// import { playAudio } from '../util'
+// import { useToasts } from "react-toast-notifications";
 
 const Player = (props) => {
-    
-    useEffect(() => {
-        const newSongs = props.songs.map((song) => {
+    const { currentSong, setCurrentSong, songs, setSongs, isPlaying, setIsPlaying, audioRef } = props
+    // const { addToast } = useToasts()
+
+    const activeLibraryHandler = (nextPrev) => {
+        const newSongs = songs.map((song) => {
             return (
-                (song.id === props.currentSong.id) 
+                (song.id === nextPrev.id) 
                     ? { ...song, active: true}
                     : { ...song, active: false}
             )
         })
-
-        props.setSongs(newSongs)
-
-        if (props.isPlaying) props.audioRef.current.play()
-    }, [props.currentSong])
-
+        setSongs(newSongs)
+        if (isPlaying) audioRef.current.play()
+    }
+ 
     const [songInfo, setSongInfo] = useState({
         currentTime: 0,
         duration: 0,
@@ -32,11 +32,11 @@ const Player = (props) => {
     }
 
     const playSongHandler = () => {
-        props.setIsPlaying(!props.isPlaying)
-        if (props.isPlaying) {
-            props.audioRef.current.pause()
+        setIsPlaying(!isPlaying)
+        if (isPlaying) {
+            audioRef.current.pause()
         } else {
-            props.audioRef.current.play()
+            audioRef.current.play()
         }
     }
 
@@ -61,7 +61,7 @@ const Player = (props) => {
     }
 
     const dragHandler = (e) => {
-        props.audioRef.current.currentTime = e.target.value
+        audioRef.current.currentTime = e.target.value
         setSongInfo({ 
             ...songInfo, 
             currentTime: e.target.value 
@@ -69,26 +69,30 @@ const Player = (props) => {
     }
 
     const songEndHandler = async (e) => {
-        const currentIndex = props.songs.findIndex((song) => song.active)
-        const nextIndex = (currentIndex+1) % props.songs.length  // % = module, rest of division
-        await props.setCurrentSong(props.songs[nextIndex])
+        const currentIndex = songs.findIndex((song) => song.active)
+        const nextIndex = (currentIndex+1) % songs.length  // % = module, rest of division
+        await setCurrentSong(songs[nextIndex])
 
-        if (props.isPlaying) props.audioRef.current.play()
+        if (isPlaying) audioRef.current.play()
     }
 
     const skipTrackHandler = async (direction) => {
-        const currentIndex = props.songs.findIndex((song) => song.active)
-        // let currentIndex = props.songs.findIndex((song) => song.id === props.currentSong.id)
+        let nextIndex = null
+        const currentIndex = songs.findIndex((song) => song.active)
+        // let currentIndex = songs.findIndex((song) => song.id === currentSong.id)
 
         if (direction === "skip-forward") {
-            // const nextIndex = (currentIndex+1 === props.songs.length) ? 0 : currentIndex + 1
-            const nextIndex = (currentIndex+1) % props.songs.length  // % = module, rest of division
-            await props.setCurrentSong(props.songs[nextIndex])
+            // const nextIndex = (currentIndex+1 === songs.length) ? 0 : currentIndex + 1
+            nextIndex = (currentIndex+1) % songs.length  // % = module, rest of division
+            await setCurrentSong(songs[nextIndex])
         } else if (direction === "skip-back") {
-            const nextIndex = (currentIndex === 0) ? props.songs.length-1 : currentIndex - 1
-            await props.setCurrentSong(props.songs[nextIndex])
+            nextIndex = (currentIndex === 0) ? songs.length-1 : currentIndex - 1
+            await setCurrentSong(songs[nextIndex])
         }
-        if (props.isPlaying) props.audioRef.current.play()
+        activeLibraryHandler(songs[nextIndex])
+        if (isPlaying) audioRef.current.play()
+        console.log('useEffect')
+        // addToast("useEffect bla bla bla bla bla bla bla", { appearance: 'info', autoDismiss: true, autoDismissTimeout: 3000 })
     }
 
     //Add the trackbar Styles
@@ -100,7 +104,7 @@ const Player = (props) => {
         <div className="player">
             <div className="time-control">
                 <p>{getTime(songInfo.currentTime)}</p>
-                <div style={{ background: `linear-gradient(to right, ${props.currentSong.color[0]}, ${props.currentSong.color[1]})` }} className="track">
+                <div style={{ background: `linear-gradient(to right, ${currentSong.color[0]}, ${currentSong.color[1]})` }} className="track">
                     <input 
                         min={0} 
                         max={songInfo.duration || 0} 
@@ -123,7 +127,7 @@ const Player = (props) => {
                     onClick={playSongHandler} 
                     className="play" 
                     size="2x" 
-                    icon={ props.isPlaying ? faPause : faPlay } 
+                    icon={ isPlaying ? faPause : faPlay } 
                 />
                 <FontAwesomeIcon 
                     onClick={() => skipTrackHandler('skip-forward')} 
@@ -136,8 +140,8 @@ const Player = (props) => {
                 onTimeUpdate={timeUpdateHandler} 
                 onLoadedMetadata={timeLoadHandler} 
                 onEnded={songEndHandler}
-                ref={props.audioRef} 
-                src={props.currentSong.audio}
+                ref={audioRef} 
+                src={currentSong.audio}
             ></audio>
         </div>
     )
