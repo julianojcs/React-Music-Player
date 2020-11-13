@@ -44,6 +44,26 @@ h3, h4 {
     color: var(--gray);
 }
 
+.App {
+    transition: all 0.5s ease;
+}
+
+.library-active{
+    margin-left: 20rem;
+}
+
+@media only screen and (max-width: 1024px) {
+    .library-active{
+        margin-left: 20rem;
+
+        .time-control {
+            width: 90% !important;
+        }
+        .play-control {
+            width: 60% !important;
+        }
+    }
+}
 @import "./song";
 @import "./player";
 @import "./library";

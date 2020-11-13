@@ -8,6 +8,7 @@ nav {
         border: none;
         cursor: pointer;
         padding: 0.5rem;
+        z-index: 10;
         border: 2px solid rgb(65, 65 ,65);
         transition: all 0.3s ease;
         &:hover {
