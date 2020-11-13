@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPlay, faPause, faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons"
-import { playAudio } from '../util'
+// import { playAudio } from '../util'
 
 const Player = (props) => {
     
@@ -16,7 +16,7 @@ const Player = (props) => {
 
         props.setSongs(newSongs)
 
-        playAudio(props.isPlaying, props.audioRef)
+        if (props.isPlaying) props.audioRef.current.play()
     }, [props.currentSong])
 
     const [songInfo, setSongInfo] = useState({
@@ -68,25 +68,27 @@ const Player = (props) => {
         })
     }
 
-    const timeEndHandler = (e) => {
-        props.setIsPlaying(false)
-        // console.log(props.audioRef.current.currentTime)
-        setSongInfo({...songInfo, currentTime: 0})
-        // console.log(props.audioRef.current.ended)
+    const songEndHandler = async (e) => {
+        const currentIndex = props.songs.findIndex((song) => song.active)
+        const nextIndex = (currentIndex+1) % props.songs.length  // % = module, rest of division
+        await props.setCurrentSong(props.songs[nextIndex])
+
+        if (props.isPlaying) props.audioRef.current.play()
     }
 
-    const skipTrackHandler = (direction) => {
+    const skipTrackHandler = async (direction) => {
         const currentIndex = props.songs.findIndex((song) => song.active)
         // let currentIndex = props.songs.findIndex((song) => song.id === props.currentSong.id)
 
         if (direction === "skip-forward") {
             // const nextIndex = (currentIndex+1 === props.songs.length) ? 0 : currentIndex + 1
             const nextIndex = (currentIndex+1) % props.songs.length  // % = module, rest of division
-            props.setCurrentSong(props.songs[nextIndex])
+            await props.setCurrentSong(props.songs[nextIndex])
         } else if (direction === "skip-back") {
             const nextIndex = (currentIndex === 0) ? props.songs.length-1 : currentIndex - 1
-            props.setCurrentSong(props.songs[nextIndex])
+            await props.setCurrentSong(props.songs[nextIndex])
         }
+        if (props.isPlaying) props.audioRef.current.play()
     }
 
     //Add the trackbar Styles
@@ -133,7 +135,7 @@ const Player = (props) => {
             <audio 
                 onTimeUpdate={timeUpdateHandler} 
                 onLoadedMetadata={timeLoadHandler} 
-                onEnded={timeEndHandler}
+                onEnded={songEndHandler}
                 ref={props.audioRef} 
                 src={props.currentSong.audio}
             ></audio>

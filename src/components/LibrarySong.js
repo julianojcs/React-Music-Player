@@ -1,5 +1,4 @@
 import React from 'react'
-import { playAudio } from '../util'
 
 const LibrarySong = (props) => {
 
@@ -16,8 +15,7 @@ const LibrarySong = (props) => {
 
         props.setSongs(newSongs)
 
-        playAudio(props.isPlaying, props.audioRef)
-
+        if (props.isPlaying) props.audioRef.current.play()
     }
 
     return(
